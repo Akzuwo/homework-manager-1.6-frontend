@@ -2,7 +2,7 @@ async function aktuellesFachLaden() {
     // Lokale Funktion für den Datenabruf
     async function update() {
         try {
-            const res = await fetch('http://localhost:5000/aktuelles_fach');
+            const res = await fetch('https://homework-manager-1-6-backend.onrender.com/aktuelles_fach');
             const data = await res.json();
             document.getElementById('fachInfo').innerHTML = `
                 <h2>Aktuelles Fach: ${data.fach}</h2>
