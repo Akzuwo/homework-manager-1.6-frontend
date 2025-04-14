@@ -1,0 +1,7 @@
+{
+  "name": "homework-manager-frontend",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "echo \"Kein Build erforderlich\""
+  }
+}
