@@ -43,10 +43,10 @@ async function openCalendar() {
     try {
         clearContent();
 
-        const resHA = await fetch('http://localhost:5000/hausaufgaben');
+        const resHA = await fetch('https://homework-manager-1-6-backend.onrender.com/hausaufgaben');
         const hausaufgaben = await resHA.json();
 
-        const resPR = await fetch('http://localhost:5000/pruefungen');
+        const resPR = await fetch('https://homework-manager-1-6-backend.onrender.com/pruefungen');
         const pruefungen = await resPR.json();
 
         const events = [
@@ -86,7 +86,7 @@ let fachInterval;
 async function loadCurrentSubject(){
     clearContent();
     async function update(){
-        const res = await fetch('http://localhost:5000/aktuelles_fach');
+        const res = await fetch('https://homework-manager-1-6-backend.onrender.com/aktuelles_fach');
         const data = await res.json();
         document.getElementById('content').innerHTML = `
             <h2>Aktuelles Fach: ${data.fach}</h2>
@@ -99,7 +99,7 @@ async function loadCurrentSubject(){
 }
 
 async function aktuellesFachLaden(){
-    const res = await fetch('http://localhost:5000/aktuelles_fach');
+    const res = await fetch('https://homework-manager-1-6-backend.onrender.com/aktuelles_fach');
     const data = await res.json();
 
     document.getElementById('fachInfo').innerHTML = `
@@ -195,7 +195,7 @@ async function saveEntry(){
     const beschreibung = document.getElementById('beschreibung').value;
     const datum = document.getElementById('datum').value;
 
-    const response = await fetch('http://localhost:5000/add_entry',{
+    const response = await fetch('https://homework-manager-1-6-backend.onrender.com/add_entry',{
         method: 'POST',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({ typ, fach, beschreibung, datum })
