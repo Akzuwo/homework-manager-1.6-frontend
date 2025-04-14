@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         const [resHA, resPR] = await Promise.all([
-            fetch('http://localhost:5000/hausaufgaben'),
-            fetch('http://localhost:5000/pruefungen')
+            fetch('https://homework-manager-1-6-backend.onrender.com/hausaufgaben'),
+            fetch('https://homework-manager-1-6-backend.onrender.com/pruefungen')
         ]);
 
         const hausaufgaben = await resHA.json();
