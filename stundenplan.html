@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Stundenplan</title>
+    <!-- Bessere Skalierung auf mobilen Geräten -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Stylesheet-Einbindung -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Semantisch sinnvoller Kopfbereich -->
+    <header>
+        <h2>🕒 Aktuelles Fach</h2>
+    </header>
+
+    <!-- Hauptinhalt -->
+    <content>
+        <div id="fachInfo">Lade...</div>
+
+    </content>
+	<footer>
+        <div id="buttons">
+            <!-- Button mit Typattribut für bessere Barrierefreiheit und Semantik -->
+            <button type="button" onclick="window.location.href='index.html'">Zurück</button>
+        </div>
+	</footer>
+
+    <!-- Script am Ende des Body eingebunden und mit "defer" für schnelleren Seitenaufbau -->
+    <script src="stundenplan.js" defer></script>
+</body>
+</html>
+
