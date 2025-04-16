@@ -20,22 +20,28 @@ function logout() {
 }
 
 function checkLogin() {
-    const role = sessionStorage.getItem('role');
-    // Erhalte den Dateinamen der aktuellen Seite
-    const currentPage = window.location.pathname.split("/").pop().toLowerCase();
-    
-    // Falls kein Login vorhanden und wir nicht auf login.html sind, leite weiter:
-    if (!role && currentPage !== 'login.html') {
-      window.location.href = 'login.html';
-      return;
+    // Prüfe, ob das aktuelle Dokument das Attribut data-skip-check="true" besitzt
+    if (document.body.dataset.skipCheck === "true") {
+        console.log("Login-Check übersprungen (Login-Seite)");
+        return; // Auf der Login-Seite soll keine Weiterleitung erfolgen
     }
-    
-    // Falls vorhanden, z. B. Element 'eintragTab' nur für Admin anzeigen:
+
+    // Andernfalls führe den regulären Check aus
+    const role = sessionStorage.getItem('role');
+
+    if (!role) {
+        window.location.href = 'login.html';
+        return;
+    }
+
+    // Optional: Element "eintragTab" anzeigen/ausblenden
     const eintragTab = document.getElementById('eintragTab');
     if (eintragTab && role !== 'admin') {
-      eintragTab.style.display = 'none';
+        eintragTab.style.display = 'none';
     }
-  }
+    console.log("Login-Check: role =", role);
+}
+
   
 
   
