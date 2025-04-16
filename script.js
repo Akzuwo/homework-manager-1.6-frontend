@@ -21,18 +21,24 @@ function logout() {
 
 function checkLogin() {
     const role = sessionStorage.getItem('role');
+    // Erhalte den Dateinamen der aktuellen Seite
+    const currentPage = window.location.pathname.split("/").pop().toLowerCase();
     
-    // Falls kein Login gefunden und wir nicht bereits auf der Login-Seite sind
-    if (!role && !window.location.pathname.includes('login.html')) {
-        window.location.href = 'login.html';
-        return;
+    // Falls kein Login vorhanden und wir nicht auf login.html sind, leite weiter:
+    if (!role && currentPage !== 'login.html') {
+      window.location.href = 'login.html';
+      return;
     }
-
+    
+    // Falls vorhanden, z. B. Element 'eintragTab' nur für Admin anzeigen:
     const eintragTab = document.getElementById('eintragTab');
     if (eintragTab && role !== 'admin') {
-        eintragTab.style.display = 'none';
+      eintragTab.style.display = 'none';
     }
-}
+  }
+  
+
+  
 
 function clearContent() {
     document.getElementById('content').innerHTML = "";
@@ -185,26 +191,70 @@ function showEntryForm() {
         </select><br>
         <input id="beschreibung" placeholder="Beschreibung"><br>
         <input type="datetime-local" id="datum"><br>
-        <button onclick="saveEntry()">Speichern</button>
+        <button id="saveButton" onclick="saveEntry()">Hinzufügen</button>
+
     `;
 }
 
-async function saveEntry(){
+async function saveEntry() {
     const typ = document.getElementById('typ').value;
     const fach = document.getElementById('fach').value;
     const beschreibung = document.getElementById('beschreibung').value;
     const datum = document.getElementById('datum').value;
+    const saveButton = document.getElementById('saveButton');  // Stelle sicher, dass der Button diese ID hat
 
-    const response = await fetch('https://homework-manager-1-6-backend.onrender.com/add_entry',{
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ typ, fach, beschreibung, datum })
-    });
+    // Button deaktivieren und visuelles Feedback geben (optional)
+    saveButton.disabled = true;
+    saveButton.innerText = "Speichern läuft...";
 
-    const result = await response.json();
-    if (result.status === "ok") alert("Gespeichert!");
-    else alert(`Fehler: ${result.message}`);
+    let success = false;
+    let attempt = 0;
+    // Maximal 10 Versuche (optional; du kannst hier auch unbegrenzt versuchen, solltest aber eine Abbruchlogik einbauen)
+    const maxAttempts = 10;
+
+    while (!success && attempt < maxAttempts) {
+        try {
+            const response = await fetch('https://homework-manager-1-6-backend.onrender.com/add_entry', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ typ, fach, beschreibung, datum })
+            });
+            const result = await response.json();
+
+            if (result.status === "ok") {
+                success = true;
+                alert("Eintrag wurde erfolgreich gespeichert!");
+            } else {
+                console.error("Server-Fehler beim Speichern:", result.message);
+            }
+        } catch (error) {
+            console.error("Netzwerk-Fehler beim Speichern:", error);
+        }
+
+        if (!success) {
+            attempt++;
+            console.warn(`Speicher-Versuch ${attempt} fehlgeschlagen. Neuer Versuch in 2 Sekunden.`);
+            // Warte 2000ms, bevor erneut versucht wird
+            await new Promise(resolve => setTimeout(resolve, 2000));
+        }
+    }
+
+    if (!success) {
+        alert("Der Eintrag konnte nach mehreren Versuchen nicht gespeichert werden. Bitte versuche es später noch einmal.");
+    } else {
+        // Eingabefelder zurücksetzen
+        document.getElementById('typ').value = "";
+        document.getElementById('fach').value = "";
+        document.getElementById('beschreibung').value = "";
+        document.getElementById('datum').value = "";
+    }
+
+    // Button wieder aktivieren
+    saveButton.disabled = false;
+    saveButton.innerText = "Hinzufügen";
 }
+
+
 
 // Initialcheck beim Laden der Seite
 window.addEventListener('DOMContentLoaded', checkLogin);
